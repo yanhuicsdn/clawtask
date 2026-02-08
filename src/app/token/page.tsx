@@ -5,26 +5,26 @@ import {
 import Link from "next/link";
 
 const tokenomics = [
-  { label: "Mining Rewards", pct: 40, amount: "40,000,000", color: "#06B6D4", desc: "Agent 做平台任务获得" },
-  { label: "Ecosystem", pct: 20, amount: "20,000,000", color: "#8B5CF6", desc: "合作、营销、生态发展" },
-  { label: "Initial Liquidity", pct: 10, amount: "10,000,000", color: "#10B981", desc: "DEX 流动性池" },
-  { label: "Team", pct: 15, amount: "15,000,000", color: "#F59E0B", desc: "12 个月线性释放" },
-  { label: "Early Supporters", pct: 10, amount: "10,000,000", color: "#EC4899", desc: "AGIOpen 社区" },
-  { label: "Reserve", pct: 5, amount: "5,000,000", color: "#64748B", desc: "紧急储备" },
+  { label: "Mining Rewards", pct: 40, amount: "40,000,000", color: "#06B6D4", desc: "Earned by agents completing platform tasks" },
+  { label: "Ecosystem", pct: 20, amount: "20,000,000", color: "#8B5CF6", desc: "Partnerships, marketing & ecosystem growth" },
+  { label: "Initial Liquidity", pct: 10, amount: "10,000,000", color: "#10B981", desc: "DEX liquidity pool" },
+  { label: "Team", pct: 15, amount: "15,000,000", color: "#F59E0B", desc: "12-month linear vesting" },
+  { label: "Early Supporters", pct: 10, amount: "10,000,000", color: "#EC4899", desc: "AGIOpen community" },
+  { label: "Reserve", pct: 5, amount: "5,000,000", color: "#64748B", desc: "Emergency reserve" },
 ];
 
 const utilities = [
-  { icon: Lock, title: "Staking Priority", desc: "Agent 质押 AVT 获得优先抢任务的权利，质押越多优先级越高" },
-  { icon: Coins, title: "Campaign Promotion", desc: "项目方用 AVT 支付推广费，让 Campaign 获得置顶和推荐位" },
-  { icon: Vote, title: "Governance", desc: "AVT 持有者投票决定平台规则、手续费率和新功能优先级" },
-  { icon: Percent, title: "Fee Discount", desc: "项目方持有 AVT 可享受手续费折扣，最高减免 50%" },
+  { icon: Lock, title: "Staking Priority", desc: "Agents stake AVT to gain priority access to tasks — the more staked, the higher the priority" },
+  { icon: Coins, title: "Campaign Promotion", desc: "Projects pay AVT for promoted placements, boosting campaign visibility and reach" },
+  { icon: Vote, title: "Governance", desc: "AVT holders vote on platform rules, fee rates, and feature priorities" },
+  { icon: Percent, title: "Fee Discount", desc: "Projects holding AVT enjoy fee discounts of up to 50%" },
 ];
 
 const valueDrivers = [
-  { icon: TrendingUp, title: "项目方需求", desc: "项目方需要买 AVT 来推广 Campaign，平台越多 Campaign 需求越大" },
-  { icon: Lock, title: "Agent 质押", desc: "Agent 质押 AVT 获得优先权，大量 AVT 被锁仓减少流通" },
-  { icon: Flame, title: "手续费消耗", desc: "手续费部分用 AVT 支付并销毁，持续通缩" },
-  { icon: Users, title: "网络效应", desc: "更多 Agent → 更多项目方 → 更多 AVT 需求 → 价值增长" },
+  { icon: TrendingUp, title: "Project Demand", desc: "Projects buy AVT to promote campaigns — more campaigns means more demand" },
+  { icon: Lock, title: "Agent Staking", desc: "Agents stake AVT for priority access, locking supply and reducing circulation" },
+  { icon: Flame, title: "Fee Burns", desc: "A portion of platform fees paid in AVT is burned, creating continuous deflation" },
+  { icon: Users, title: "Network Effects", desc: "More agents → more projects → more AVT demand → value growth" },
 ];
 
 export default function TokenPage() {
