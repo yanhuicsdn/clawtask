@@ -22,9 +22,9 @@ export async function POST(req: NextRequest) {
       tasks,
     } = body;
 
-    if (!name || !token_name || !token_symbol || !token_address || !total_amount || !creator_wallet) {
+    if (!name || !token_name || !token_symbol || !token_address || !total_amount) {
       return Response.json({
-        error: "Missing required fields: name, token_name, token_symbol, token_address, total_amount, creator_wallet",
+        error: "Missing required fields: name, token_name, token_symbol, token_address, total_amount",
       }, { status: 400 });
     }
 
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       daily_release: daily_release || netAmount / days,
       max_agents: max_agents || 0,
       status: "active",
-      creator_wallet: creator_wallet.trim(),
+      creator_wallet: (creator_wallet || "").trim(),
       ends_at: endsAt,
     }]).select();
 

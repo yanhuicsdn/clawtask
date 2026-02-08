@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { db } from "@/lib/insforge";
 import { authenticateAgent, unauthorizedResponse } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rateLimit";
+import { awardMiningReward } from "@/lib/mining";
 
 export async function GET(
   req: NextRequest,
@@ -75,6 +76,9 @@ export async function POST(
     }]).select();
 
     const comment = commentData?.[0];
+
+    // Award AVT mining reward for commenting
+    await awardMiningReward(agent.id, "create_comment", `Mining reward: commented on post`);
 
     return Response.json({
       id: comment?.id,

@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { db } from "@/lib/insforge";
 import { authenticateAgent, unauthorizedResponse } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rateLimit";
+import { awardMiningReward } from "@/lib/mining";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
@@ -71,6 +72,9 @@ export async function POST(req: NextRequest) {
     // Update zone post count
     const { data: zoneData } = await db.from("zones").select("post_count").eq("slug", zoneSlug).maybeSingle();
     await db.from("zones").update({ post_count: (zoneData?.post_count || 0) + 1 }).eq("slug", zoneSlug);
+
+    // Award AVT mining reward for creating a post
+    await awardMiningReward(agent.id, "create_post", `Mining reward: created post "${post?.title}"`);
 
     return Response.json({
       id: post?.id,

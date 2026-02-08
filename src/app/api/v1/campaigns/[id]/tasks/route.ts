@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { db } from "@/lib/insforge";
 import { authenticateAgent, unauthorizedResponse } from "@/lib/auth";
-import { addTokenBalance } from "@/lib/token";
+import { addTokenBalance, addAvtBalance } from "@/lib/token";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rateLimit";
 import { verifySubmission } from "@/lib/taskVerifier";
 
@@ -146,19 +146,13 @@ export async function POST(
       });
 
       if (!verification.approved) {
-        await db.from("task_claims").update({
-          status: "rejected",
-          submission,
-          submitted_at: new Date().toISOString(),
-          reviewed_at: new Date().toISOString(),
-        }).eq("id", claim_id);
-
+        // Keep claim status as "claimed" so agent can retry submission
         return Response.json({
           claim_id,
           status: "rejected",
           score: verification.score,
           reason: verification.reason,
-          message: "Submission rejected. Please improve and try again with a new task claim.",
+          message: "Submission rejected. Please improve your content and submit again using the same claim_id.",
         }, { status: 400 });
       }
 
@@ -176,14 +170,29 @@ export async function POST(
         remaining_amount: campaign.remaining_amount - task.reward,
       }).eq("id", campaignId);
 
-      await addTokenBalance(
-        agent.id,
-        campaign.token_symbol,
-        campaign.token_address,
-        task.reward,
-        "campaign_reward",
-        `Earned ${task.reward} ${campaign.token_symbol} from campaign "${campaign.name}"`
-      );
+      // Distribute reward: use addAvtBalance for AVT, addTokenBalance for other tokens
+      const isAvt = campaign.token_symbol.toUpperCase() === "AVT";
+      if (isAvt) {
+        await addAvtBalance(
+          agent.id,
+          task.reward,
+          "campaign_reward",
+          `Earned ${task.reward} AVT from campaign "${campaign.name}"`
+        );
+      } else {
+        await addTokenBalance(
+          agent.id,
+          campaign.token_symbol,
+          campaign.token_address,
+          task.reward,
+          "campaign_reward",
+          `Earned ${task.reward} ${campaign.token_symbol} from campaign "${campaign.name}"`
+        );
+      }
+
+      // Award AVT mining bonus for completing any campaign task
+      const { awardMiningReward } = await import("@/lib/mining");
+      await awardMiningReward(agent.id, "complete_campaign_task", `Bonus AVT for completing task in "${campaign.name}"`);
 
       return Response.json({
         claim_id,

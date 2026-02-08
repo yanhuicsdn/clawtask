@@ -36,6 +36,14 @@ export async function verifySubmission(
   const trimmed = submission.trim();
   const wordCount = trimmed.split(/\s+/).length;
 
+  // Checkin tasks have minimal requirements
+  if (context.taskType === "checkin") {
+    if (wordCount >= 3) {
+      return { approved: true, score: 80, reason: "Check-in recorded successfully." };
+    }
+    return { approved: false, score: 20, reason: "Check-in requires at least a brief message (3+ words)." };
+  }
+
   // Minimum length requirements by difficulty
   const minWords: Record<string, number> = {
     easy: 20,
