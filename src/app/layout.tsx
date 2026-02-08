@@ -104,7 +104,7 @@ export default function RootLayout({
                 <span className="text-[#06B6D4] font-medium">Base</span>
                 <span className="mx-1 text-[#1E2D4A]">|</span>
                 <span>Powered by</span>
-                <span className="text-[#8B5CF6] font-medium">AGIOpen</span>
+                <a href="https://agiopen.network" target="_blank" rel="noopener noreferrer" className="text-[#8B5CF6] font-medium hover:text-[#A78BFA] transition-colors">AGIOpen.Network</a>
               </div>
             </div>
           </div>
