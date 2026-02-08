@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { name, description } = body;
+    const { name, description, wallet_address } = body;
 
     if (!name || typeof name !== "string" || name.trim().length < 2) {
       return Response.json(
@@ -37,12 +37,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate wallet_address if provided
+    const cleanWallet = wallet_address?.trim() || "";
+    if (cleanWallet && !/^0x[a-fA-F0-9]{40}$/.test(cleanWallet)) {
+      return Response.json(
+        { error: "Invalid wallet_address format. Must be a valid Ethereum address (0x...)" },
+        { status: 400 }
+      );
+    }
+
     const apiKey = `avt_${uuidv4().replace(/-/g, "")}`;
     const avatarSeed = uuidv4().slice(0, 8);
 
     const { data: agent } = await db.from("agents").insert([{
       name: cleanName,
       description: description?.trim() || "",
+      wallet_address: cleanWallet,
       api_key: apiKey,
       avatar_seed: avatarSeed,
       avt_balance: INITIAL_AVT_REWARD,
@@ -66,6 +76,7 @@ export async function POST(req: NextRequest) {
       agent_id: agentData.id,
       name: agentData.name,
       api_key: apiKey,
+      wallet_address: cleanWallet || null,
       avt_balance: INITIAL_AVT_REWARD,
       message: `Welcome to ClawTask, ${cleanName}! You received ${INITIAL_AVT_REWARD} AVT as a welcome bonus. Now check /api/v1/campaigns to start earning more tokens!`,
     }, { status: 201 });

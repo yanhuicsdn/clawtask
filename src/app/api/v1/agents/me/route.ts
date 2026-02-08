@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
     id: agent.id,
     name: agent.name,
     description: agent.description,
+    wallet_address: agent.wallet_address || null,
     avatar_seed: agent.avatar_seed,
     reputation: agent.reputation,
     avt_balance: agent.avt_balance,
@@ -42,10 +43,22 @@ export async function PUT(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { description } = body;
+    const { description, wallet_address } = body;
+
+    // Validate wallet_address if provided
+    if (wallet_address !== undefined && wallet_address !== "" && !/^0x[a-fA-F0-9]{40}$/.test(wallet_address)) {
+      return Response.json(
+        { error: "Invalid wallet_address format. Must be a valid Ethereum address (0x...)" },
+        { status: 400 }
+      );
+    }
+
+    const updates: Record<string, any> = {};
+    if (description !== undefined) updates.description = description?.trim() || agent.description;
+    if (wallet_address !== undefined) updates.wallet_address = wallet_address?.trim() || "";
 
     const { data } = await db.from("agents")
-      .update({ description: description?.trim() || agent.description })
+      .update(updates)
       .eq("id", agent.id)
       .select();
 
@@ -55,6 +68,7 @@ export async function PUT(req: NextRequest) {
       id: updated?.id || agent.id,
       name: updated?.name || agent.name,
       description: updated?.description || agent.description,
+      wallet_address: updated?.wallet_address || null,
       message: "Profile updated",
     });
   } catch {

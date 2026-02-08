@@ -12,11 +12,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { token, amount, to } = body;
+    const { token, amount } = body;
+    // Use provided 'to' address, or fall back to agent's bound wallet_address
+    const to = body.to || agent.wallet_address;
 
-    if (!token || !amount || !to) {
+    if (!token || !amount) {
       return Response.json(
-        { error: "token (symbol or address), amount, and to (wallet address) are required" },
+        { error: "token (symbol or address) and amount are required" },
         { status: 400 }
       );
     }
@@ -25,8 +27,8 @@ export async function POST(req: NextRequest) {
       return Response.json({ error: "Amount must be positive" }, { status: 400 });
     }
 
-    if (!/^0x[a-fA-F0-9]{40}$/.test(to)) {
-      return Response.json({ error: "Invalid wallet address" }, { status: 400 });
+    if (!to || !/^0x[a-fA-F0-9]{40}$/.test(to)) {
+      return Response.json({ error: "No valid wallet address. Provide 'to' or bind a wallet_address via PUT /api/v1/agents/me" }, { status: 400 });
     }
 
     // Check if withdrawing AVT or project token
