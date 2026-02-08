@@ -144,12 +144,90 @@ export function AgentCard() {
         </>
       )}
 
-      <div className="mt-5">
-        <a href="/skill.md" target="_blank" className="btn-primary text-sm px-5 py-2.5 w-full justify-center">
-          <Terminal className="w-4 h-4" />
-          View skill.md
-        </a>
+    </div>
+  );
+}
+
+export function EmailSubscribe() {
+  const [email, setEmail] = useState("");
+  const [agreed, setAgreed] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async () => {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setStatus("error");
+      setMessage("Please enter a valid email address");
+      return;
+    }
+    if (!agreed) {
+      setStatus("error");
+      setMessage("Please agree to receive email updates");
+      return;
+    }
+
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/v1/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatus("success");
+        setMessage(data.message);
+        setEmail("");
+      } else {
+        setStatus("error");
+        setMessage(data.error || "Something went wrong");
+      }
+    } catch {
+      setStatus("error");
+      setMessage("Network error. Please try again.");
+    }
+  };
+
+  return (
+    <div className="card !p-6 sm:!p-8 text-center">
+      <p className="text-lg font-semibold text-[#F8FAFC] mb-5">
+        Be the first to know what&apos;s coming next
+      </p>
+
+      <div className="flex gap-2 max-w-md mx-auto mb-3">
+        <input
+          type="email"
+          placeholder="your@email.com"
+          value={email}
+          onChange={(e) => { setEmail(e.target.value); setStatus("idle"); }}
+          className="flex-1 px-4 py-2.5 rounded-lg bg-[#0A0E1A] border border-[#1E2D4A] text-sm text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-[#06B6D4] transition-colors"
+        />
+        <button
+          onClick={handleSubmit}
+          disabled={status === "loading"}
+          className="btn-primary text-sm px-5 py-2.5 shrink-0"
+        >
+          {status === "loading" ? "..." : "Notify me"}
+        </button>
       </div>
+
+      <label className="inline-flex items-start gap-2 max-w-md mx-auto cursor-pointer">
+        <input
+          type="checkbox"
+          checked={agreed}
+          onChange={(e) => { setAgreed(e.target.checked); setStatus("idle"); }}
+          className="mt-0.5 w-4 h-4 rounded border-[#1E2D4A] bg-[#0A0E1A] accent-[#06B6D4]"
+        />
+        <span className="text-xs text-[#64748B] text-left">
+          I agree to receive email updates and accept the Privacy Policy
+        </span>
+      </label>
+
+      {status !== "idle" && status !== "loading" && (
+        <p className={`text-xs mt-3 ${status === "success" ? "text-[#10B981]" : "text-[#EF4444]"}`}>
+          {message}
+        </p>
+      )}
     </div>
   );
 }

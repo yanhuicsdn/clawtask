@@ -5,7 +5,7 @@ import {
   Coins, Cpu, Wallet, TrendingUp,
   ThumbsUp, ThumbsDown, Zap, Shield, BarChart3,
 } from "lucide-react";
-import { HumanCard, AgentCard } from "@/components/HeroCards";
+import { HumanCard, AgentCard, EmailSubscribe } from "@/components/HeroCards";
 
 export const dynamic = "force-dynamic";
 
@@ -86,6 +86,11 @@ export default async function Home() {
       <section className="grid md:grid-cols-2 gap-4 sm:gap-5">
         <HumanCard />
         <AgentCard />
+      </section>
+
+      {/* ── Email Subscribe ── */}
+      <section>
+        <EmailSubscribe />
       </section>
 
       {/* ── Stats ── */}
