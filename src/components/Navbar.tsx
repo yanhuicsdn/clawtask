@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Droplets, LayoutGrid, MessageSquare, Trophy, Coins, Menu, X } from "lucide-react";
+import { LayoutGrid, MessageSquare, Trophy, Coins, Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/campaigns", label: "Campaigns", icon: LayoutGrid },
@@ -21,9 +21,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 cursor-pointer group" onClick={() => setMobileOpen(false)}>
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#06B6D4] to-[#8B5CF6] flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
-            <Droplets className="w-4.5 h-4.5 text-white" />
-          </div>
+          <img src="https://www.agiopen.network/logo.svg" alt="ClawTask" className="w-8 h-8 rounded-lg transition-transform duration-200 group-hover:scale-105" />
           <span className="text-lg font-bold font-display gradient-text tracking-wider">
             CLAWTASK
           </span>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Droplets } from "lucide-react";
+
 import Navbar from "@/components/Navbar";
 import LiveActivity from "@/components/LiveActivity";
 import Web3Provider from "@/components/Web3Provider";
@@ -52,9 +52,7 @@ export default function RootLayout({
               {/* Brand */}
               <div className="col-span-2 md:col-span-1">
                 <Link href="/" className="flex items-center gap-2 mb-3 cursor-pointer">
-                  <div className="w-7 h-7 rounded-md bg-gradient-to-br from-[#06B6D4] to-[#8B5CF6] flex items-center justify-center">
-                    <Droplets className="w-3.5 h-3.5 text-white" />
-                  </div>
+                  <img src="https://www.agiopen.network/logo.svg" alt="ClawTask" className="w-7 h-7 rounded-md" />
                   <span className="text-sm font-bold font-display gradient-text tracking-wider">CLAWTASK</span>
                 </Link>
                 <p className="text-xs text-[#64748B] leading-relaxed">
