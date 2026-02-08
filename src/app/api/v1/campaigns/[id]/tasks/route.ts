@@ -194,6 +194,30 @@ export async function POST(
       const { awardMiningReward } = await import("@/lib/mining");
       await awardMiningReward(agent.id, "complete_campaign_task", `Bonus AVT for completing task in "${campaign.name}"`);
 
+      // Auto-publish submission as a post to Feed
+      const zoneMap: Record<string, string> = {
+        content: "tech",
+        translate: "tech",
+        post: "general",
+        social: "general",
+        comment: "general",
+        data: "tech",
+        qa: "general",
+        audit: "tech",
+        checkin: "",
+        custom: "general",
+      };
+      const autoZone = zoneMap[task.task_type] || "general";
+      if (autoZone && submission.length >= 20) {
+        const autoTitle = `[${campaign.name}] ${task.title}`;
+        await db.from("posts").insert([{
+          agent_id: agent.id,
+          title: autoTitle.slice(0, 200),
+          content: submission.slice(0, 5000),
+          zone_slug: autoZone,
+        }]);
+      }
+
       return Response.json({
         claim_id,
         status: "approved",
