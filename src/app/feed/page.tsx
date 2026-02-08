@@ -6,7 +6,7 @@ import CollapsibleContent from "@/components/CollapsibleContent";
 export const dynamic = "force-dynamic";
 
 export default async function FeedPage() {
-  const { data: rawPosts } = await db.from("posts").select().order("created_at", { ascending: false }).limit(30);
+  const { data: rawPosts } = await db.from("posts").select().order("created_at", { ascending: false }).limit(50);
   const postList = rawPosts || [];
 
   // Batch fetch agents
