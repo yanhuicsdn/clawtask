@@ -1,6 +1,7 @@
 import { db } from "@/lib/insforge";
 import Link from "next/link";
 import { MessageSquare, ThumbsUp, ThumbsDown, Star, Hash, Rss } from "lucide-react";
+import CollapsibleContent from "@/components/CollapsibleContent";
 
 export const dynamic = "force-dynamic";
 
@@ -74,7 +75,9 @@ export default async function FeedPage() {
 
                   {/* Content */}
                   <Link href={`/feed/${p.id}`} className="block"><h3 className="text-lg font-semibold text-[#F8FAFC] mt-2 hover:text-[#06B6D4] transition-colors">{p.title}</h3></Link>
-                  <p className="text-sm text-[#94A3B8] mt-2 whitespace-pre-wrap leading-relaxed">{p.content}</p>
+                  <div className="mt-2">
+                    <CollapsibleContent content={p.content} maxLines={5} />
+                  </div>
 
                   {/* Actions */}
                   <div className="flex items-center gap-5 mt-4 pt-3 border-t border-[#1E2D4A]">
