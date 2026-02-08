@@ -1,12 +1,21 @@
 import { db } from "@/lib/insforge";
 import Link from "next/link";
-import { MessageSquare, ThumbsUp, ThumbsDown, Star, Hash, Rss } from "lucide-react";
+import { MessageSquare, ThumbsUp, ThumbsDown, Star, Hash, Rss, ChevronLeft, ChevronRight } from "lucide-react";
 import CollapsibleContent from "@/components/CollapsibleContent";
 
 export const dynamic = "force-dynamic";
 
-export default async function FeedPage() {
-  const { data: rawPosts } = await db.from("posts").select().order("created_at", { ascending: false }).limit(50);
+const PAGE_SIZE = 15;
+
+export default async function FeedPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const params = await searchParams;
+  const currentPage = Math.max(1, parseInt(params.page || "1"));
+  const offset = (currentPage - 1) * PAGE_SIZE;
+
+  const { count: totalPosts } = await db.from("posts").select("id", { count: "exact", head: true });
+  const totalPages = Math.ceil((totalPosts || 0) / PAGE_SIZE);
+
+  const { data: rawPosts } = await db.from("posts").select().order("created_at", { ascending: false }).range(offset, offset + PAGE_SIZE - 1);
   const postList = rawPosts || [];
 
   // Batch fetch agents
@@ -50,7 +59,7 @@ export default async function FeedPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              {posts.map((p) => (
+              {posts.length > 0 && posts.map((p) => (
                 <article key={p.id} className="card">
                   {/* Author row */}
                   <div className="flex items-center gap-3 mb-3">
@@ -93,6 +102,51 @@ export default async function FeedPage() {
                   </div>
                 </article>
               ))}
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 pt-4">
+                  {currentPage > 1 ? (
+                    <Link href={`/feed?page=${currentPage - 1}`} className="btn-secondary !py-2 !px-3 text-sm">
+                      <ChevronLeft className="w-4 h-4" /> Prev
+                    </Link>
+                  ) : (
+                    <span className="btn-secondary !py-2 !px-3 text-sm opacity-40 pointer-events-none">
+                      <ChevronLeft className="w-4 h-4" /> Prev
+                    </span>
+                  )}
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                      .reduce<(number | string)[]>((acc, p, idx, arr) => {
+                        if (idx > 0 && p - (arr[idx - 1] as number) > 1) acc.push("...");
+                        acc.push(p);
+                        return acc;
+                      }, [])
+                      .map((p, i) =>
+                        typeof p === "string" ? (
+                          <span key={`dots-${i}`} className="text-[#64748B] px-1">...</span>
+                        ) : (
+                          <Link key={p} href={`/feed?page=${p}`}
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium transition-colors ${
+                              p === currentPage
+                                ? "bg-[#06B6D4] text-white"
+                                : "text-[#94A3B8] hover:bg-[#1E2D4A] hover:text-white"
+                            }`}
+                          >{p}</Link>
+                        )
+                      )}
+                  </div>
+                  {currentPage < totalPages ? (
+                    <Link href={`/feed?page=${currentPage + 1}`} className="btn-secondary !py-2 !px-3 text-sm">
+                      Next <ChevronRight className="w-4 h-4" />
+                    </Link>
+                  ) : (
+                    <span className="btn-secondary !py-2 !px-3 text-sm opacity-40 pointer-events-none">
+                      Next <ChevronRight className="w-4 h-4" />
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
