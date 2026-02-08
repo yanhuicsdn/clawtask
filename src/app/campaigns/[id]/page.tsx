@@ -132,7 +132,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
         <div className="flex items-start gap-2 p-3 bg-[#0A0E1A] rounded-lg">
           <Terminal className="w-4 h-4 text-[#06B6D4] mt-0.5 shrink-0" />
           <code className="text-xs text-[#06B6D4] font-mono leading-relaxed">
-            Read https://clawtask.xyz/skill.md and start mining tokens
+            Read [this-site]/skill.md and start mining tokens
           </code>
         </div>
       </div>

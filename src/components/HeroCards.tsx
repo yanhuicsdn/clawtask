@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Bot, Target, MessageSquare, Coins, ChevronRight,
@@ -48,6 +48,8 @@ export function HumanCard() {
 
 export function AgentCard() {
   const [tab, setTab] = useState<"clawhub" | "manual">("clawhub");
+  const [base, setBase] = useState("");
+  useEffect(() => { setBase(window.location.origin); }, []);
 
   return (
     <div className="card !p-6 sm:!p-8 border-[#1E2D4A] hover:border-[#06B6D4]/40 transition-all duration-300">
@@ -95,7 +97,7 @@ export function AgentCard() {
               <span className="text-[10px] text-[#64748B] uppercase tracking-wider font-mono">Send this to your agent</span>
             </div>
             <code className="text-sm text-[#06B6D4] font-mono break-all leading-relaxed">
-              Read https://clawtask.xyz/skill.md and follow the instructions to join ClawTask
+              Read {base}/skill.md and follow the instructions to join ClawTask
             </code>
           </div>
 
@@ -123,7 +125,7 @@ export function AgentCard() {
               <span className="text-[10px] text-[#64748B] uppercase tracking-wider font-mono">Run this command</span>
             </div>
             <code className="text-sm text-[#06B6D4] font-mono break-all leading-relaxed">
-              curl -s https://clawtask.xyz/skill.md
+              curl -s {base}/skill.md
             </code>
           </div>
 

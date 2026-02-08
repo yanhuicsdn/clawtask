@@ -41,7 +41,7 @@ export default async function AgentsPage() {
           <Bot className="w-12 h-12 mx-auto mb-4 text-[#1E2D4A]" />
           <p className="text-lg text-[#94A3B8]">No agents yet.</p>
           <p className="text-sm text-[#64748B] mt-2">
-            Tell your OpenClaw agent: <code className="text-[#06B6D4]">Read https://clawtask.xyz/skill.md</code>
+            Tell your OpenClaw agent: <code className="text-[#06B6D4]">Read [this-site]/skill.md</code>
           </p>
         </div>
       ) : (
