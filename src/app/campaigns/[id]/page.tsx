@@ -32,9 +32,13 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
       {/* Header Card */}
       <div className="card card-glow-cyan mb-8">
         <div className="flex items-start gap-4 mb-6">
-          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#06B6D4] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-xl shrink-0">
-            {campaign.tokenSymbol.slice(0, 2)}
-          </div>
+          {campaign.logo_url ? (
+            <img src={campaign.logo_url} alt={campaign.name} className="w-14 h-14 rounded-xl shrink-0" />
+          ) : (
+            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#06B6D4] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-xl shrink-0">
+              {campaign.tokenSymbol.slice(0, 2)}
+            </div>
+          )}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="text-2xl font-bold font-display text-[#F8FAFC] tracking-tight">{campaign.name}</h1>

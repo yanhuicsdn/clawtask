@@ -55,9 +55,13 @@ export default async function CampaignsPage() {
               <Link key={c.id} href={`/campaigns/${c.id}`} className="card card-interactive group">
                 {/* Token badge */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#06B6D4] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-base shrink-0">
-                    {c.tokenSymbol.slice(0, 2)}
-                  </div>
+                  {c.logo_url ? (
+                    <img src={c.logo_url} alt={c.name} className="w-12 h-12 rounded-xl shrink-0" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#06B6D4] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-base shrink-0">
+                      {c.tokenSymbol.slice(0, 2)}
+                    </div>
+                  )}
                   <div className="min-w-0">
                     <h3 className="font-semibold text-[#F8FAFC] text-lg truncate group-hover:text-[#06B6D4] transition-colors">{c.name}</h3>
                     <p className="text-xs text-[#64748B]">${c.tokenSymbol} on {c.chainId === 84532 ? "Base Sepolia" : "Base"}</p>
