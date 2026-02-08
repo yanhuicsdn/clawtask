@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { db } from "@/lib/insforge";
+import { getSessionOwner } from "@/lib/ownerAuth";
 
 const PLATFORM_FEE_RATE = 0.05; // 5%
 
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
       max_agents: max_agents || 0,
       status: "active",
       creator_wallet: (creator_wallet || "").trim(),
+      owner_id: (await getSessionOwner())?.id || "",
       ends_at: endsAt,
     }]).select();
 

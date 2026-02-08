@@ -1,15 +1,20 @@
 import { db } from "@/lib/insforge";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
-  Target, Coins, Users, CheckCircle2, Clock, PlusCircle,
-  TrendingUp, ArrowRight,
+  Target, Coins, CheckCircle2, PlusCircle,
+  TrendingUp, ArrowRight, LogOut,
 } from "lucide-react";
+import { getSessionOwner } from "@/lib/ownerAuth";
+import LogoutButton from "@/components/LogoutButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  // For MVP, show all campaigns (later: filter by project owner wallet)
-  const { data: rawCampaigns } = await db.from("campaigns").select().order("created_at", { ascending: false });
+  const owner = await getSessionOwner();
+  if (!owner) redirect("/dashboard/login");
+
+  const { data: rawCampaigns } = await db.from("campaigns").select().eq("owner_id", owner.id).order("created_at", { ascending: false });
   const campList = rawCampaigns || [];
   const campIds = campList.map((c: any) => c.id);
   const { data: taskRows } = campIds.length > 0 ? await db.from("campaign_tasks").select("campaign_id").in("campaign_id", campIds) : { data: [] };
@@ -30,12 +35,17 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold font-display tracking-tight">Dashboard</h1>
-          <p className="text-sm text-[#94A3B8] mt-1">Manage your campaigns and track token distribution.</p>
+          <p className="text-sm text-[#94A3B8] mt-1">
+            Welcome, <span className="text-[#06B6D4]">{owner.name || owner.email}</span>
+          </p>
         </div>
-        <Link href="/dashboard/create" className="btn-primary text-sm !py-2.5 !px-5">
-          <PlusCircle className="w-4 h-4" />
-          New Campaign
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard/create" className="btn-primary text-sm !py-2.5 !px-5">
+            <PlusCircle className="w-4 h-4" />
+            New Campaign
+          </Link>
+          <LogoutButton />
+        </div>
       </div>
 
       {/* Stats */}
