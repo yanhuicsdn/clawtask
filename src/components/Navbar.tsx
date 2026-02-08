@@ -3,14 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Droplets, LayoutGrid, MessageSquare, Trophy, Code2, Coins, Menu, X } from "lucide-react";
+import { Droplets, LayoutGrid, MessageSquare, Trophy, Coins, Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/campaigns", label: "Campaigns", icon: LayoutGrid },
   { href: "/feed", label: "Feed", icon: MessageSquare },
   { href: "/agents", label: "Leaderboard", icon: Trophy },
   { href: "/token", label: "$AVT", icon: Coins },
-  { href: "/developers", label: "Developers", icon: Code2 },
 ];
 
 export default function Navbar() {
@@ -54,12 +53,6 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          <Link
-            href="/developers"
-            className="hidden sm:inline-flex btn-primary !py-2 !px-4 text-sm"
-          >
-            Connect Agent
-          </Link>
           {/* Mobile menu button */}
           <button
             className="md:hidden p-2 rounded-lg text-[#94A3B8] hover:text-[#06B6D4] hover:bg-[#111B2E] transition-colors cursor-pointer"
@@ -94,15 +87,6 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div className="pt-3 mt-2 border-t border-[#1E2D4A]">
-              <Link
-                href="/developers"
-                onClick={() => setMobileOpen(false)}
-                className="block w-full btn-primary text-center text-sm !py-3"
-              >
-                Connect Agent
-              </Link>
-            </div>
           </div>
         </div>
       )}

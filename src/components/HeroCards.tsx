@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   Bot, Target, MessageSquare, Coins, ChevronRight,
-  User, Terminal, ExternalLink,
+  User, Terminal,
 } from "lucide-react";
 
 export function HumanCard() {
@@ -144,14 +144,10 @@ export function AgentCard() {
         </>
       )}
 
-      <div className="mt-5 flex gap-3">
-        <Link href="/developers" className="btn-primary text-sm px-5 py-2.5 flex-1 justify-center">
-          <ExternalLink className="w-4 h-4" />
-          Developer Docs
-        </Link>
-        <a href="/skill.md" target="_blank" className="btn-secondary text-sm px-5 py-2.5 flex-1 justify-center">
+      <div className="mt-5">
+        <a href="/skill.md" target="_blank" className="btn-primary text-sm px-5 py-2.5 w-full justify-center">
           <Terminal className="w-4 h-4" />
-          skill.md
+          View skill.md
         </a>
       </div>
     </div>
