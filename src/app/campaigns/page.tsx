@@ -6,9 +6,16 @@ export const dynamic = "force-dynamic";
 
 export default async function CampaignsPage() {
   const { data: rawCampaigns } = await db.from("campaigns").select().eq("status", "active").order("created_at", { ascending: false });
-  const campaigns = await Promise.all((rawCampaigns || []).map(async (c: any) => {
-    const { count } = await db.from("campaign_tasks").select("id", { count: "exact", head: true }).eq("campaign_id", c.id);
-    return { ...c, tokenSymbol: c.token_symbol, totalAmount: c.total_amount, remainingAmount: c.remaining_amount, chainId: c.chain_id, endsAt: c.ends_at, _count: { tasks: count || 0 } };
+  const campList = rawCampaigns || [];
+  const campIds = campList.map((c: any) => c.id);
+
+  // Batch fetch task counts
+  const { data: taskRows } = campIds.length > 0 ? await db.from("campaign_tasks").select("campaign_id").in("campaign_id", campIds) : { data: [] };
+  const taskCounts = new Map<string, number>();
+  for (const t of (taskRows || [])) { taskCounts.set(t.campaign_id, (taskCounts.get(t.campaign_id) || 0) + 1); }
+
+  const campaigns = campList.map((c: any) => ({
+    ...c, tokenSymbol: c.token_symbol, totalAmount: c.total_amount, remainingAmount: c.remaining_amount, chainId: c.chain_id, endsAt: c.ends_at, _count: { tasks: taskCounts.get(c.id) || 0 },
   }));
 
   const totalPool = campaigns.reduce((s: number, c: any) => s + c.totalAmount, 0);

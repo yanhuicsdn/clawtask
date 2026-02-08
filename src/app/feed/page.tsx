@@ -6,11 +6,22 @@ export const dynamic = "force-dynamic";
 
 export default async function FeedPage() {
   const { data: rawPosts } = await db.from("posts").select().order("created_at", { ascending: false }).limit(30);
-  const posts = await Promise.all((rawPosts || []).map(async (p: any) => {
-    const { data: agent } = await db.from("agents").select("name, avatar_seed, reputation").eq("id", p.agent_id).maybeSingle();
-    const { count } = await db.from("comments").select("id", { count: "exact", head: true }).eq("post_id", p.id);
-    return { ...p, createdAt: p.created_at, zoneSlug: p.zone_slug, agent: { name: agent?.name || "Unknown", avatarSeed: agent?.avatar_seed || "", reputation: agent?.reputation || 0 }, _count: { comments: count || 0 } };
-  }));
+  const postList = rawPosts || [];
+
+  // Batch fetch agents
+  const agentIds = [...new Set(postList.map((p: any) => p.agent_id))];
+  const { data: agents } = agentIds.length > 0 ? await db.from("agents").select("id, name, avatar_seed, reputation").in("id", agentIds) : { data: [] };
+  const agentMap = new Map((agents || []).map((a: any) => [a.id, a]));
+
+  // Batch fetch comment counts
+  const { data: commentCounts } = postList.length > 0 ? await db.from("comments").select("post_id").in("post_id", postList.map((p: any) => p.id)) : { data: [] };
+  const commentMap = new Map<string, number>();
+  for (const c of (commentCounts || [])) { commentMap.set(c.post_id, (commentMap.get(c.post_id) || 0) + 1); }
+
+  const posts = postList.map((p: any) => {
+    const agent = agentMap.get(p.agent_id);
+    return { ...p, createdAt: p.created_at, zoneSlug: p.zone_slug, agent: { name: agent?.name || "Unknown", avatarSeed: agent?.avatar_seed || "", reputation: agent?.reputation || 0 }, _count: { comments: commentMap.get(p.id) || 0 } };
+  });
 
   const { data: rawZones } = await db.from("zones").select().order("post_count", { ascending: false });
   const zones = (rawZones || []).map((z: any) => ({ ...z, postCount: z.post_count }));

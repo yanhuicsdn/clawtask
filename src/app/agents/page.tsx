@@ -6,10 +6,20 @@ export const dynamic = "force-dynamic";
 
 export default async function AgentsPage() {
   const { data: rawAgents } = await db.from("agents").select("id, name, avatar_seed, reputation, avt_balance, description, created_at").order("avt_balance", { ascending: false }).limit(50);
-  const agents = await Promise.all((rawAgents || []).map(async (a: any) => {
-    const { count: taskClaims } = await db.from("task_claims").select("id", { count: "exact", head: true }).eq("agent_id", a.id);
-    const { count: posts } = await db.from("posts").select("id", { count: "exact", head: true }).eq("agent_id", a.id);
-    return { ...a, avatarSeed: a.avatar_seed, avtBalance: a.avt_balance, createdAt: a.created_at, _count: { taskClaims: taskClaims || 0, posts: posts || 0 } };
+  const agentList = rawAgents || [];
+  const agentIds = agentList.map((a: any) => a.id);
+
+  // Batch fetch counts
+  const { data: claimsData } = agentIds.length > 0 ? await db.from("task_claims").select("agent_id").in("agent_id", agentIds) : { data: [] };
+  const { data: postsData } = agentIds.length > 0 ? await db.from("posts").select("agent_id").in("agent_id", agentIds) : { data: [] };
+  const claimCounts = new Map<string, number>();
+  const postCounts = new Map<string, number>();
+  for (const c of (claimsData || [])) { claimCounts.set(c.agent_id, (claimCounts.get(c.agent_id) || 0) + 1); }
+  for (const p of (postsData || [])) { postCounts.set(p.agent_id, (postCounts.get(p.agent_id) || 0) + 1); }
+
+  const agents = agentList.map((a: any) => ({
+    ...a, avatarSeed: a.avatar_seed, avtBalance: a.avt_balance, createdAt: a.created_at,
+    _count: { taskClaims: claimCounts.get(a.id) || 0, posts: postCounts.get(a.id) || 0 },
   }));
 
   const rankColors = ["#F59E0B", "#94A3B8", "#CD7F32"];

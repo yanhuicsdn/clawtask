@@ -7,27 +7,40 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function AnalyticsPage() {
-  const { data: rawCampaigns } = await db.from("campaigns").select();
-  const campaigns = await Promise.all((rawCampaigns || []).map(async (c: any) => {
-    const { count } = await db.from("campaign_tasks").select("id", { count: "exact", head: true }).eq("campaign_id", c.id);
-    return { ...c, tokenSymbol: c.token_symbol, totalAmount: c.total_amount, remainingAmount: c.remaining_amount, _count: { tasks: count || 0 } };
-  }));
+  // Parallel fetch base data
+  const [{ data: rawCampaigns }, { count: totalAgents }, { count: totalTasks }, { count: totalApproved }, { data: rawClaims }] = await Promise.all([
+    db.from("campaigns").select(),
+    db.from("agents").select("id", { count: "exact", head: true }),
+    db.from("campaign_tasks").select("id", { count: "exact", head: true }),
+    db.from("task_claims").select("id", { count: "exact", head: true }).eq("status", "approved"),
+    db.from("task_claims").select().eq("status", "approved").order("reviewed_at", { ascending: false }).limit(15),
+  ]);
 
-  const { count: totalAgents } = await db.from("agents").select("id", { count: "exact", head: true });
-  const { count: totalTasks } = await db.from("campaign_tasks").select("id", { count: "exact", head: true });
-  const { count: totalApproved } = await db.from("task_claims").select("id", { count: "exact", head: true }).eq("status", "approved");
-
-  const { data: rawClaims } = await db.from("task_claims").select().eq("status", "approved").order("reviewed_at", { ascending: false }).limit(15);
-  const recentClaims = await Promise.all((rawClaims || []).map(async (c: any) => {
-    const { data: agent } = await db.from("agents").select("name").eq("id", c.agent_id).maybeSingle();
-    const { data: task } = await db.from("campaign_tasks").select("title, campaign_id").eq("id", c.task_id).maybeSingle();
-    let campaign = { name: "Unknown", tokenSymbol: "AVT" };
-    if (task) {
-      const { data: camp } = await db.from("campaigns").select("name, token_symbol").eq("id", task.campaign_id).maybeSingle();
-      if (camp) campaign = { name: camp.name, tokenSymbol: camp.token_symbol };
-    }
-    return { ...c, rewardPaid: c.reward_paid, reviewedAt: c.reviewed_at, agent: { name: agent?.name || "Unknown" }, task: { title: task?.title || "Unknown", campaign } };
+  // Batch campaign task counts
+  const campList = rawCampaigns || [];
+  const campIds = campList.map((c: any) => c.id);
+  const { data: taskRows } = campIds.length > 0 ? await db.from("campaign_tasks").select("campaign_id").in("campaign_id", campIds) : { data: [] };
+  const taskCounts = new Map<string, number>();
+  for (const t of (taskRows || [])) { taskCounts.set(t.campaign_id, (taskCounts.get(t.campaign_id) || 0) + 1); }
+  const campaigns = campList.map((c: any) => ({
+    ...c, tokenSymbol: c.token_symbol, totalAmount: c.total_amount, remainingAmount: c.remaining_amount, _count: { tasks: taskCounts.get(c.id) || 0 },
   }));
+  const campMap = new Map(campList.map((c: any) => [c.id, c]));
+
+  // Batch resolve recentClaims relations
+  const claimList = rawClaims || [];
+  const claimAgentIds = [...new Set(claimList.map((c: any) => c.agent_id))];
+  const claimTaskIds = [...new Set(claimList.map((c: any) => c.task_id))];
+  const { data: claimAgents } = claimAgentIds.length > 0 ? await db.from("agents").select("id, name").in("id", claimAgentIds) : { data: [] };
+  const { data: claimTasks } = claimTaskIds.length > 0 ? await db.from("campaign_tasks").select("id, title, campaign_id").in("id", claimTaskIds) : { data: [] };
+  const agentNameMap = new Map((claimAgents || []).map((a: any) => [a.id, a.name]));
+  const taskMap = new Map((claimTasks || []).map((t: any) => [t.id, t]));
+
+  const recentClaims = claimList.map((c: any) => {
+    const task = taskMap.get(c.task_id);
+    const camp = task ? campMap.get(task.campaign_id) : null;
+    return { ...c, rewardPaid: c.reward_paid, reviewedAt: c.reviewed_at, agent: { name: agentNameMap.get(c.agent_id) || "Unknown" }, task: { title: task?.title || "Unknown", campaign: { name: camp?.name || "Unknown", tokenSymbol: camp?.token_symbol || "AVT" } } };
+  });
 
   const totalDeposited = campaigns.reduce((s: number, c: any) => s + c.totalAmount, 0);
   const totalDistributed = campaigns.reduce((s: number, c: any) => s + (c.totalAmount - c.remainingAmount), 0);
