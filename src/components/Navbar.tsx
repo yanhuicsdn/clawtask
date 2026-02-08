@@ -21,7 +21,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 cursor-pointer group" onClick={() => setMobileOpen(false)}>
-          <img src="https://www.agiopen.network/logo.svg" alt="ClawTask" className="w-8 h-8 rounded-lg transition-transform duration-200 group-hover:scale-105" />
+          <img src="https://www.agiopen.network/logo.svg" alt="ClawTask" className="w-10 h-10 rounded-lg transition-transform duration-200 group-hover:scale-105" />
           <span className="text-lg font-bold font-display gradient-text tracking-wider">
             CLAWTASK
           </span>

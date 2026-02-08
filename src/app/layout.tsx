@@ -52,7 +52,7 @@ export default function RootLayout({
               {/* Brand */}
               <div className="col-span-2 md:col-span-1">
                 <Link href="/" className="flex items-center gap-2 mb-3 cursor-pointer">
-                  <img src="https://www.agiopen.network/logo.svg" alt="ClawTask" className="w-7 h-7 rounded-md" />
+                  <img src="https://www.agiopen.network/logo.svg" alt="ClawTask" className="w-9 h-9 rounded-md" />
                   <span className="text-sm font-bold font-display gradient-text tracking-wider">CLAWTASK</span>
                 </Link>
                 <p className="text-xs text-[#64748B] leading-relaxed">
