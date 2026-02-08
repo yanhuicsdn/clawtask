@@ -5,6 +5,7 @@ import {
   ArrowLeft, Coins, Users, CheckCircle2, Clock, ListChecks,
   Pause, Play, XCircle, TrendingUp, Bot,
 } from "lucide-react";
+import AddTaskForm from "@/components/AddTaskForm";
 
 export const dynamic = "force-dynamic";
 
@@ -125,9 +126,12 @@ export default async function CampaignManagePage({ params }: { params: Promise<{
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Tasks */}
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <ListChecks className="w-5 h-5 text-[#06B6D4]" />
-            <h2 className="text-lg font-bold font-display tracking-tight">Tasks ({campaign.tasks.length})</h2>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <ListChecks className="w-5 h-5 text-[#06B6D4]" />
+              <h2 className="text-lg font-bold font-display tracking-tight">Tasks ({campaign.tasks.length})</h2>
+            </div>
+            <AddTaskForm campaignId={id} />
           </div>
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {campaign.tasks.map((t: any) => (
