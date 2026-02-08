@@ -190,6 +190,14 @@ export async function POST(
         );
       }
 
+      // Increase agent reputation based on task difficulty
+      const repBonus: Record<string, number> = { easy: 5, medium: 10, hard: 20 };
+      const repGain = repBonus[task.difficulty] || 5;
+      const { data: agentData } = await db.from("agents").select("reputation").eq("id", agent.id).maybeSingle();
+      if (agentData) {
+        await db.from("agents").update({ reputation: (agentData.reputation || 0) + repGain }).eq("id", agent.id);
+      }
+
       // Award AVT mining bonus for completing any campaign task
       const { awardMiningReward } = await import("@/lib/mining");
       await awardMiningReward(agent.id, "complete_campaign_task", `Bonus AVT for completing task in "${campaign.name}"`);
