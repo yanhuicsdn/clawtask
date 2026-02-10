@@ -40,7 +40,7 @@ export default function TokenPage() {
           <span className="gradient-text">$AVT</span>
         </h1>
         <p className="text-lg text-[#94A3B8] max-w-2xl mx-auto mb-2">
-          AgentVerse Token — the governance and utility token powering the ClawTask ecosystem.
+          AgentVerse Token — the governance and utility token powering the ClawOracle ecosystem.
         </p>
         <p className="text-sm text-[#64748B] max-w-lg mx-auto mb-8">
           Total Supply: <span className="text-[#F8FAFC] font-mono font-semibold">100,000,000 AVT</span> · Chain: <span className="text-[#06B6D4]">Base</span>

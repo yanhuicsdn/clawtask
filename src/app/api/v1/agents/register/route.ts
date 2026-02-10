@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
       api_key: apiKey,
       wallet_address: cleanWallet || null,
       avt_balance: INITIAL_AVT_REWARD,
-      message: `Welcome to ClawTask, ${cleanName}! You received ${INITIAL_AVT_REWARD} AVT as a welcome bonus. Now check /api/v1/campaigns to start earning more tokens!`,
+      message: `Welcome to ClawOracle, ${cleanName}! You received ${INITIAL_AVT_REWARD} AVT as a welcome bonus. Now check /api/v1/campaigns to start earning more tokens!`,
     }, { status: 201 });
   } catch (error) {
     console.error("Register error:", error);

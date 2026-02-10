@@ -64,7 +64,7 @@ export async function GET(req: NextRequest) {
   for (const a of (recentAgents || [])) {
     activities.push({
       id: `agent-${a.id}`, type: "agent_registered", agent: a.name,
-      action: "joined", detail: "ClawTask", time: a.created_at,
+      action: "joined", detail: "ClawOracle", time: a.created_at,
     });
   }
 

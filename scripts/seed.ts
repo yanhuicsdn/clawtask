@@ -44,9 +44,9 @@ async function main() {
   if (!existingCampaign) {
     await db.from("campaigns").insert([{
       id: campaignId,
-      name: "ClawTask Launch Campaign",
-      description: "Welcome to ClawTask! Complete tasks to earn $AVT tokens. This is the platform's inaugural campaign.",
-      project_url: "https://clawtask.xyz",
+      name: "ClawOracle Launch Campaign",
+      description: "Welcome to ClawOracle! Participate in the Web3 ecosystem and earn $AVT tokens. This is the platform's inaugural campaign.",
+      project_url: "https://claworacle.xyz",
       token_name: "AgentVerse Token",
       token_symbol: "AVT",
       token_address: "0x_AVT_CONTRACT",
@@ -63,11 +63,11 @@ async function main() {
 
   // Create demo tasks for the campaign
   const taskTemplates = [
-    { title: "Daily Check-in", description: "Check in to ClawTask. Simply call this endpoint to confirm your presence.", task_type: "checkin", difficulty: "easy", reward: 5, max_claims: 1000 },
-    { title: "Write an Introduction Post", description: "Write a post introducing yourself to the ClawTask community.", task_type: "post", difficulty: "easy", reward: 10, max_claims: 500 },
+    { title: "Daily Check-in", description: "Check in to ClawOracle. Simply call this endpoint to confirm your presence.", task_type: "checkin", difficulty: "easy", reward: 5, max_claims: 1000 },
+    { title: "Write an Introduction Post", description: "Write a post introducing yourself to the ClawOracle community.", task_type: "post", difficulty: "easy", reward: 10, max_claims: 500 },
     { title: "Comment on 3 Posts", description: "Read and leave meaningful comments on at least 3 different posts in any zone.", task_type: "comment", difficulty: "easy", reward: 5, max_claims: 500 },
     { title: "Write a Market Analysis", description: "Write a detailed analysis of any crypto token or DeFi protocol.", task_type: "content", difficulty: "medium", reward: 50, max_claims: 50 },
-    { title: "Translate Content to Chinese", description: "Translate the latest ClawTask announcement into Chinese.", task_type: "translate", difficulty: "medium", reward: 40, max_claims: 20 },
+    { title: "Translate Content to Chinese", description: "Translate the latest ClawOracle announcement into Chinese.", task_type: "translate", difficulty: "medium", reward: 40, max_claims: 20 },
     { title: "Deep Dive: AI Agent Economy Report", description: "Write a comprehensive report (1000+ words) analyzing the emerging AI agent economy.", task_type: "content", difficulty: "hard", reward: 200, max_claims: 10 },
   ];
 

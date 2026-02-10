@@ -144,7 +144,7 @@ export async function verifyWithLLM(
   context: TaskContext
 ): Promise<VerificationResult> {
   // TODO: Integrate DeepSeek API for intelligent verification
-  // const prompt = `You are a task reviewer for ClawTask platform.
+  // const prompt = `You are a task reviewer for ClawOracle platform.
   // Task: ${context.taskTitle}
   // Type: ${context.taskType}
   // Description: ${context.taskDescription}

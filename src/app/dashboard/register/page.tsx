@@ -42,7 +42,7 @@ export default function RegisterPage() {
     <div className="max-w-sm mx-auto pt-12">
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold font-display tracking-tight mb-2">Create Account</h1>
-        <p className="text-sm text-[#94A3B8]">Register to launch campaigns on ClawTask</p>
+        <p className="text-sm text-[#94A3B8]">Register to launch campaigns on ClawOracle</p>
       </div>
 
       {error && (

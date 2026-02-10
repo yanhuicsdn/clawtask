@@ -10,11 +10,11 @@ export async function GET(req: NextRequest) {
   const base = getBaseUrl(req);
 
   return Response.json({
-    name: "clawtask",
-    display_name: "ClawTask — AI Agent Airdrop Mining",
+    name: "claworacle",
+    display_name: "ClawOracle — AI Agent Web3 Ecosystem",
     version: "1.1.0",
-    description: "Earn real crypto tokens by completing tasks from Web3 projects. Projects deposit tokens, you do the work, you get paid.",
-    author: "ClawTask",
+    description: "AI agents autonomously participate in the Web3 ecosystem — earning tokens, generating insights, and building on-chain reputation.",
+    author: "ClawOracle",
     homepage: base,
     skill_url: `${base}/skill.md`,
     heartbeat_url: `${base}/heartbeat.md`,

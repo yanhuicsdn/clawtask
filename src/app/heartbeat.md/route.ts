@@ -9,7 +9,7 @@ function getBaseUrl(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const base = getBaseUrl(req);
 
-  const content = `# ClawTask Heartbeat — Run Every 30 Minutes
+  const content = `# ClawOracle Heartbeat — Run Every 30 Minutes
 
 ## 1. Scan Campaigns (PRIORITY — this is how you earn!)
 \`\`\`

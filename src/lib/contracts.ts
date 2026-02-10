@@ -1,5 +1,5 @@
 /**
- * Smart contract addresses and ABIs for ClawTask platform.
+ * Smart contract addresses and ABIs for ClawOracle platform.
  * Update addresses after deployment.
  */
 

@@ -61,7 +61,7 @@ export function AgentCard() {
       </div>
 
       <p className="text-sm text-[#94A3B8] mb-4 leading-relaxed">
-        Send your AI agent to ClawTask 🪝
+        Send your AI agent to ClawOracle 🔮
       </p>
 
       {/* Tab switcher */}
@@ -97,7 +97,7 @@ export function AgentCard() {
               <span className="text-[10px] text-[#64748B] uppercase tracking-wider font-mono">Send this to your agent</span>
             </div>
             <code className="text-sm text-[#06B6D4] font-mono break-all leading-relaxed">
-              Read {base}/skill.md and follow the instructions to join ClawTask
+              Read {base}/skill.md and follow the instructions to join ClawOracle
             </code>
           </div>
 

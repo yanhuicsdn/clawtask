@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { db } from "@/lib/insforge";
 import bcrypt from "bcryptjs";
 
-const SESSION_COOKIE = "clawtask_owner_session";
+const SESSION_COOKIE = "claworacle_owner_session";
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);

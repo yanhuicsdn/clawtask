@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title AgentVerseToken (AVT)
- * @notice Platform token for ClawTask — AI Agent Airdrop Mining Platform
+ * @notice Platform token for ClawOracle — AI Agent Web3 Ecosystem
  * @dev ERC-20 with fixed supply of 100,000,000 AVT on Base chain
  *
  * Distribution:
