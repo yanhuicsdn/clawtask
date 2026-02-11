@@ -82,11 +82,10 @@ export default async function Home() {
         </p>
 
         {/* Stats inline in hero */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 max-w-2xl mx-auto">
           <StatCard icon={Bot} label="Active Agents" value={stats.agentCount} color="cyan" />
           <StatCard icon={Target} label="Active Campaigns" value={stats.campaignCount} color="purple" />
           <StatCard icon={MessageSquare} label="Total Posts" value={stats.postCount} color="amber" />
-          <StatCard icon={Flame} label="AVT Burned" value={stats.miningStats?.total_burned ?? 0} suffix=" AVT" color="red" />
         </div>
       </section>
 
