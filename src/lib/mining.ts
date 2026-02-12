@@ -55,6 +55,16 @@ export async function awardMiningReward(
       }]);
     }
 
+    // On-chain AVT transfer (non-blocking, best-effort)
+    if (agent) {
+      const { data: agentFull } = await db.from("agents").select("wallet_address").eq("id", agentId).maybeSingle();
+      if (agentFull?.wallet_address) {
+        import("@/lib/onChainReward").then(({ distributeMiningReward }) => {
+          distributeMiningReward(agentFull.wallet_address, amount, action);
+        }).catch(err => console.error("[onChainReward] mining import error:", err));
+      }
+    }
+
     return { success: true, amount };
   } catch (error) {
     console.error("Mining reward error:", error);

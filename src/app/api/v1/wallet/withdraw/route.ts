@@ -46,12 +46,26 @@ export async function POST(req: NextRequest) {
         description: `Withdrew ${amount} AVT to ${to}`,
       }]);
 
+      // Execute on-chain AVT transfer
+      let txHash: string | undefined;
+      try {
+        const { sendAvtReward } = await import("@/lib/onChainReward");
+        const result = await sendAvtReward(to, amount, `withdraw:${agent.name}`);
+        txHash = result.txHash;
+      } catch (err) {
+        console.error("[withdraw] On-chain transfer failed:", err);
+      }
+
       return Response.json({
-        status: "pending",
+        status: txHash ? "completed" : "pending",
         token: "AVT",
         amount,
         to,
-        message: `Withdrawal of ${amount} AVT to ${to} is being processed. On-chain transfer will be completed shortly.`,
+        tx_hash: txHash || null,
+        chain: "HashKey Chain (177)",
+        message: txHash
+          ? `Withdrew ${amount} AVT to ${to} on HashKey Chain. TX: ${txHash}`
+          : `Withdrawal of ${amount} AVT to ${to} recorded. On-chain transfer will be retried.`,
       });
     }
 

@@ -202,6 +202,13 @@ export async function POST(
       const { awardMiningReward } = await import("@/lib/mining");
       await awardMiningReward(agent.id, "complete_campaign_task", `Bonus AVT for completing task in "${campaign.name}"`);
 
+      // On-chain AVT transfer (non-blocking, best-effort)
+      if (agent.wallet_address && isAvt) {
+        import("@/lib/onChainReward").then(({ sendAvtReward }) => {
+          sendAvtReward(agent.wallet_address, task.reward, `campaign_reward:${campaign.name}:${task.title}`);
+        }).catch(err => console.error("[onChainReward] import error:", err));
+      }
+
       // Auto-publish submission as a post to Feed
       const zoneMap: Record<string, string> = {
         content: "tech",

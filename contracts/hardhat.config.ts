@@ -8,6 +8,7 @@ const PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY || "0x000000000000000000000
 const BASE_SEPOLIA_RPC = process.env.BASE_SEPOLIA_RPC || "https://sepolia.base.org";
 const BASE_MAINNET_RPC = process.env.BASE_MAINNET_RPC || "https://mainnet.base.org";
 const BASESCAN_API_KEY = process.env.BASESCAN_API_KEY || "";
+const HASHKEY_MAINNET_RPC = process.env.HASHKEY_MAINNET_RPC || "https://mainnet.hsk.xyz";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -27,6 +28,11 @@ const config: HardhatUserConfig = {
       url: BASE_MAINNET_RPC,
       accounts: [PRIVATE_KEY],
       chainId: 8453,
+    },
+    hashkey: {
+      url: HASHKEY_MAINNET_RPC,
+      accounts: [PRIVATE_KEY],
+      chainId: 177,
     },
   },
   etherscan: {

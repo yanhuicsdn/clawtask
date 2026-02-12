@@ -6,13 +6,13 @@
 // ── Contract Addresses ──
 // Set via environment variables or update after deployment
 export const CONTRACT_ADDRESSES = {
-  AVT: (process.env.NEXT_PUBLIC_AVT_ADDRESS || "0x0000000000000000000000000000000000000000") as `0x${string}`,
-  CAMPAIGN_VAULT: (process.env.NEXT_PUBLIC_VAULT_ADDRESS || "0x0000000000000000000000000000000000000000") as `0x${string}`,
-  MINING_POOL: (process.env.NEXT_PUBLIC_MINING_POOL_ADDRESS || "0x0000000000000000000000000000000000000000") as `0x${string}`,
+  AVT: (process.env.NEXT_PUBLIC_AVT_ADDRESS || "0x8e10cb3C0E9248004876Ecf2f9428BBeBd34b012") as `0x${string}`,
+  CAMPAIGN_VAULT: (process.env.NEXT_PUBLIC_VAULT_ADDRESS || "0x0ED96A088897bbF6ea82D7B0F7F228bD680AAA8a") as `0x${string}`,
+  MINING_POOL: (process.env.NEXT_PUBLIC_MINING_POOL_ADDRESS || "0x9EE7B7585f0946D33F1FbfE694D3fD141678fb01") as `0x${string}`,
 } as const;
 
 // ── Chain Config ──
-export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "84532"); // Base Sepolia default
+export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "177"); // HashKey Chain mainnet
 
 // ── ABIs (minimal for frontend interaction) ──
 
